@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System;
+using TileRift.Daily;
 using TileRift.Level;
 using TileRift.UI;
 using UnityEngine;
@@ -16,6 +18,8 @@ namespace TileRift.Runtime
         private IReadOnlyList<LevelData> _levels;
         private LevelFlowController _levelFlow;
         private GameSession _session;
+        private ProgressRepository _progressRepository;
+        private PlayerProgress _progress;
 
         private void Start()
         {
@@ -32,6 +36,11 @@ namespace TileRift.Runtime
                 return;
             }
 
+            _progressRepository = new ProgressRepository();
+            _progress = _progressRepository.Load();
+            DailyRewardService.ApplyToProgress(_progress, DateTime.UtcNow);
+            _progressRepository.Save(_progress);
+
             _levelFlow = new LevelFlowController(_levels);
             StartGame();
         }
@@ -39,7 +48,7 @@ namespace TileRift.Runtime
         public void StartGame()
         {
             var level = _levelFlow.Start();
-            _session = new GameSession(level, initialCoin);
+            _session = new GameSession(level, ResolveInitialCoin());
             RefreshViews();
             menuPresenter?.ShowHome();
         }
@@ -47,7 +56,7 @@ namespace TileRift.Runtime
         public void RestartLevel()
         {
             var level = _levelFlow.Restart();
-            _session = new GameSession(level, initialCoin);
+            _session = new GameSession(level, _session.Hud.Coin);
             RefreshViews();
             menuPresenter?.HideAll();
         }
@@ -80,6 +89,7 @@ namespace TileRift.Runtime
             }
 
             RefreshViews();
+            PersistProgress();
             if (_session.Menu.Current == MenuScreen.Win)
             {
                 menuPresenter?.ShowWin();
@@ -105,6 +115,27 @@ namespace TileRift.Runtime
         {
             hudPresenter?.Render(_session.Hud);
             boardDebugView?.Render(_session.Board);
+        }
+
+        private int ResolveInitialCoin()
+        {
+            if (_progress == null)
+            {
+                return initialCoin;
+            }
+
+            return Math.Max(initialCoin, _progress.coin);
+        }
+
+        private void PersistProgress()
+        {
+            if (_progressRepository == null || _progress == null || _session == null)
+            {
+                return;
+            }
+
+            _progress.coin = _session.Hud.Coin;
+            _progressRepository.Save(_progress);
         }
     }
 }
