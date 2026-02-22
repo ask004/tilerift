@@ -26,6 +26,7 @@ namespace TileRift.Runtime
         private int _completedLevelCount;
         private RuntimeAnalyticsBridge _analytics;
         private int _currentLevelId;
+        private bool _isDailyMode;
 
         private void Start()
         {
@@ -63,6 +64,50 @@ namespace TileRift.Runtime
             var level = _levelFlow.Start();
             _session = new GameSession(level, ResolveInitialCoin());
             _currentLevelId = level.levelId;
+            _isDailyMode = false;
+            RefreshViews();
+            menuPresenter?.ShowHome();
+            _analytics.LevelStart(level.levelId);
+        }
+
+        public void StartDailyChallenge()
+        {
+            if (_levels == null || _levels.Count == 0)
+            {
+                return;
+            }
+
+            var level = DailyChallengeSelector.SelectLevel(DateTime.UtcNow.Date, _levels);
+            if (level == null)
+            {
+                return;
+            }
+
+            _session = new GameSession(level, ResolveInitialCoin());
+            _currentLevelId = level.levelId;
+            _isDailyMode = true;
+            RefreshViews();
+            menuPresenter?.ShowHome();
+            _analytics.LevelStart(level.levelId);
+        }
+
+        public void StartDailyChallengeForDate(int year, int month, int day)
+        {
+            if (_levels == null || _levels.Count == 0)
+            {
+                return;
+            }
+
+            var targetDate = new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc);
+            var level = DailyChallengeSelector.SelectLevel(targetDate, _levels);
+            if (level == null)
+            {
+                return;
+            }
+
+            _session = new GameSession(level, ResolveInitialCoin());
+            _currentLevelId = level.levelId;
+            _isDailyMode = true;
             RefreshViews();
             menuPresenter?.ShowHome();
             _analytics.LevelStart(level.levelId);
@@ -73,6 +118,7 @@ namespace TileRift.Runtime
             var level = _levelFlow.Restart();
             _session = new GameSession(level, _session.Hud.Coin);
             _currentLevelId = level.levelId;
+            _isDailyMode = false;
             RefreshViews();
             menuPresenter?.HideAll();
             _analytics.LevelStart(level.levelId);
@@ -89,6 +135,7 @@ namespace TileRift.Runtime
 
             _session = new GameSession(next, _session.Hud.Coin);
             _currentLevelId = next.levelId;
+            _isDailyMode = false;
             RefreshViews();
             menuPresenter?.HideAll();
             _analytics.LevelStart(next.levelId);
@@ -112,9 +159,13 @@ namespace TileRift.Runtime
             if (_session.Menu.Current == MenuScreen.Win)
             {
                 menuPresenter?.ShowWin();
-                _completedLevelCount++;
+                if (!_isDailyMode)
+                {
+                    _completedLevelCount++;
+                    _monetization.TryShowInterstitial(_completedLevelCount);
+                }
+
                 _analytics.LevelComplete(_currentLevelId);
-                _monetization.TryShowInterstitial(_completedLevelCount);
             }
             else if (_session.Menu.Current == MenuScreen.Fail)
             {
