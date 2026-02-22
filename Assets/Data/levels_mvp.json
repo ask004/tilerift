@@ -1,0 +1,25 @@
+{
+  "levels": [
+    {
+      "levelId": 1,
+      "width": 4,
+      "height": 4,
+      "maxMoves": 12,
+      "initialRows": ["R..G", ".B..", "..R.", "G..."]
+    },
+    {
+      "levelId": 2,
+      "width": 4,
+      "height": 4,
+      "maxMoves": 12,
+      "initialRows": ["RG..", "..B.", ".R..", "...G"]
+    },
+    {
+      "levelId": 3,
+      "width": 5,
+      "height": 5,
+      "maxMoves": 14,
+      "initialRows": ["R...G", ".B...", "..R..", "...G.", "..B.."]
+    }
+  ]
+}
