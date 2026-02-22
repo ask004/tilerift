@@ -9,7 +9,11 @@ namespace TileRift.Daily
         public static int SeedFor(DateTime day)
         {
             var key = day.ToString("yyyy-MM-dd");
-            var data = SHA256.HashData(Encoding.UTF8.GetBytes(key));
+            byte[] data;
+            using (var sha = SHA256.Create())
+            {
+                data = sha.ComputeHash(Encoding.UTF8.GetBytes(key));
+            }
             return BitConverter.ToInt32(data, 0) & int.MaxValue;
         }
     }
