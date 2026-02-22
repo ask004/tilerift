@@ -1,3 +1,4 @@
+using TileRift.Boosters;
 using TileRift.Core;
 using TileRift.Economy;
 using TileRift.Level;
@@ -16,6 +17,7 @@ namespace TileRift.Runtime
         public CoinWallet Wallet { get; }
         public HudState Hud { get; }
         public MenuStateMachine Menu { get; }
+        public BoosterService Boosters { get; }
 
         public GameSession(LevelData level, int initialCoin)
         {
@@ -29,6 +31,7 @@ namespace TileRift.Runtime
             Hud = new HudState(level.maxMoves, Wallet.Balance);
             Menu = new MenuStateMachine();
             LoadInitialBoard();
+            Boosters = new BoosterService(Board);
         }
 
         public bool TryMove((int x, int y) source, (int x, int y) target)
@@ -38,6 +41,7 @@ namespace TileRift.Runtime
                 return false;
             }
 
+            Boosters.Snapshot();
             var moved = Board.Move(source, target);
             if (!moved)
             {
@@ -64,6 +68,22 @@ namespace TileRift.Runtime
             }
 
             return true;
+        }
+
+        public bool TryUndo()
+        {
+            return Boosters.Undo();
+        }
+
+        public ((int x, int y) source, (int x, int y) target)? TryHint()
+        {
+            return Boosters.Hint();
+        }
+
+        public void Shuffle(int seed = 17)
+        {
+            Boosters.Snapshot();
+            Boosters.Shuffle(seed);
         }
 
         private void LoadInitialBoard()

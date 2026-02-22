@@ -199,6 +199,56 @@ namespace TileRift.Runtime
             hudPresenter?.Render(_session.Hud);
         }
 
+        public bool TryUseUndoBooster()
+        {
+            if (_session == null)
+            {
+                return false;
+            }
+
+            var ok = _session.TryUndo();
+            if (!ok)
+            {
+                return false;
+            }
+
+            RefreshViews();
+            return true;
+        }
+
+        public bool TryUseHintBooster(out int sx, out int sy, out int tx, out int ty)
+        {
+            sx = sy = tx = ty = -1;
+            if (_session == null)
+            {
+                return false;
+            }
+
+            var hint = _session.TryHint();
+            if (!hint.HasValue)
+            {
+                return false;
+            }
+
+            sx = hint.Value.source.x;
+            sy = hint.Value.source.y;
+            tx = hint.Value.target.x;
+            ty = hint.Value.target.y;
+            return true;
+        }
+
+        public bool TryUseShuffleBooster(int seed = 17)
+        {
+            if (_session == null)
+            {
+                return false;
+            }
+
+            _session.Shuffle(seed);
+            RefreshViews();
+            return true;
+        }
+
         private void RefreshViews()
         {
             hudPresenter?.Render(_session.Hud);
