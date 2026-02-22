@@ -4,99 +4,99 @@ Toplam tahmin: `52-60 saat` (tek geliştirici)
 
 ## Backlog (Issue Listesi + Saat)
 
-1. `INIT-01` Proje kurulumu ve klasör yapısı  
+1. `INIT-01` Proje kurulumu ve klasör yapısı - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: `Scenes`, `Scripts`, `Prefabs`, `Data`, `UI` yapısı hazır.
 
-2. `CORE-01` Grid/Board veri modeli  
+2. `CORE-01` Grid/Board veri modeli - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: Hücreler, parça tipi, doluluk kontrolü çalışıyor.
 
-3. `CORE-02` Drag & Drop sistemi  
+3. `CORE-02` Drag & Drop sistemi - tamamlandı  
 Tahmin: `4s`  
 Kabul kriteri: Parça seçme/taşıma/bırakma stabil.
 
-4. `CORE-03` Match/Sort kural motoru  
+4. `CORE-03` Match/Sort kural motoru - tamamlandı  
 Tahmin: `4s`  
 Kabul kriteri: Geçerli/Geçersiz hamle kontrolü doğru.
 
-5. `CORE-04` Win/Lose state yönetimi  
+5. `CORE-04` Win/Lose state yönetimi - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Bölüm bitiş ve başarısızlık net tetikleniyor.
 
-6. `LEVEL-01` JSON level formatı ve loader  
+6. `LEVEL-01` JSON level formatı ve loader - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: JSON’dan level runtime’da yükleniyor.
 
-7. `LEVEL-02` Level flow (start/restart/next)  
+7. `LEVEL-02` Level flow (start/restart/next) - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Akış kesintisiz, soft lock yok.
 
-8. `UI-01` HUD (hamle, coin, pause)  
+8. `UI-01` HUD (hamle, coin, pause) - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: HUD doğru veri gösteriyor.
 
-9. `UI-02` Menü ekranları (home, fail, win)  
+9. `UI-02` Menü ekranları (home, fail, win) - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: Tüm ekran geçişleri stabil.
 
-10. `POLISH-01` Temel animasyonlar ve feedback  
+10. `POLISH-01` Temel animasyonlar ve feedback - tamamlandı  
 Tahmin: `4s`  
 Kabul kriteri: Move/success/fail hissi yeterli.
 
-11. `CONTENT-01` 60 level üretimi  
+11. `CONTENT-01` 60 level üretimi - tamamlandı  
 Tahmin: `8s`  
 Kabul kriteri: Zorluk eğrisi kolay-orta-zor dağıtılmış.
 
-12. `CONTENT-02` Dengeleme turu (playtest fix)  
+12. `CONTENT-02` Dengeleme turu (playtest fix) - tamamlandı  
 Tahmin: `4s`  
 Kabul kriteri: İlk 15 dk’da sert tıkanma yok.
 
-13. `DAILY-01` Daily Challenge seed sistemi  
+13. `DAILY-01` Daily Challenge seed sistemi - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: Her gün tek bölüm deterministik üretiliyor.
 
-14. `DAILY-02` Streak ve günlük ödül  
+14. `DAILY-02` Streak ve günlük ödül - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Günlük girişte streak artıyor/bozuluyor doğru.
 
-15. `ECON-01` Coin ekonomisi (kazan/harca)  
+15. `ECON-01` Coin ekonomisi (kazan/harca) - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Coin loop çalışıyor, negatif coin yok.
 
-16. `BOOST-01` Boosters (Undo/Hint/Shuffle - basit)  
+16. `BOOST-01` Boosters (Undo/Hint/Shuffle - basit) - tamamlandı  
 Tahmin: `4s`  
 Kabul kriteri: 3 booster temel haliyle çalışır.
 
-17. `MON-01` AdMob rewarded entegrasyonu  
+17. `MON-01` AdMob rewarded entegrasyonu - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: Fail sonrası continue ve coin ödülü çalışır.
 
-18. `MON-02` AdMob interstitial entegrasyonu  
+18. `MON-02` AdMob interstitial entegrasyonu - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Frekans kuralı ile reklam gösterimi stabil.
 
-19. `MON-03` Unity IAP ürünleri  
+19. `MON-03` Unity IAP ürünleri - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: `No Ads` + `Coin Pack` purchase flow tamam.
 
-20. `AN-01` Analytics eventleri  
+20. `AN-01` Analytics eventleri - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: `level_start/complete`, `ad_watched`, `iap_purchase` loglanır.
 
-21. `QA-01` Android build pipeline + test  
+21. `QA-01` Android build pipeline + test - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Release build alınır, kritik crash yok.
 
-22. `QA-02` Bugfix buffer  
+22. `QA-02` Bugfix buffer - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: P0/P1 bug kapanmış.
 
-23. `STORE-01` Store assetleri (ikon, 5 screenshot, kısa video)  
+23. `STORE-01` Store assetleri (ikon, 5 screenshot, kısa video) - tamamlandı  
 Tahmin: `3s`  
 Kabul kriteri: Yayın için minimum materyal hazır.
 
-24. `STORE-02` Store listing metni + ASO  
+24. `STORE-02` Store listing metni + ASO - tamamlandı  
 Tahmin: `2s`  
 Kabul kriteri: Başlık, kısa/uzun açıklama, keyword set tamam.
 
