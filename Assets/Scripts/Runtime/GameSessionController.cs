@@ -3,6 +3,7 @@ using System;
 using TileRift.Daily;
 using TileRift.Level;
 using TileRift.Monetization;
+using TileRift.Analytics;
 using TileRift.UI;
 using UnityEngine;
 
@@ -23,6 +24,8 @@ namespace TileRift.Runtime
         private PlayerProgress _progress;
         private MonetizationFacade _monetization;
         private int _completedLevelCount;
+        private RuntimeAnalyticsBridge _analytics;
+        private int _currentLevelId;
 
         private void Start()
         {
@@ -49,6 +52,7 @@ namespace TileRift.Runtime
                 new InterstitialAdsProviderMock(ready: true),
                 new IapProviderMock(new IapServiceMock()),
                 new InterstitialPolicy(3));
+            _analytics = new RuntimeAnalyticsBridge(new AnalyticsService());
 
             _levelFlow = new LevelFlowController(_levels);
             StartGame();
@@ -58,16 +62,20 @@ namespace TileRift.Runtime
         {
             var level = _levelFlow.Start();
             _session = new GameSession(level, ResolveInitialCoin());
+            _currentLevelId = level.levelId;
             RefreshViews();
             menuPresenter?.ShowHome();
+            _analytics.LevelStart(level.levelId);
         }
 
         public void RestartLevel()
         {
             var level = _levelFlow.Restart();
             _session = new GameSession(level, _session.Hud.Coin);
+            _currentLevelId = level.levelId;
             RefreshViews();
             menuPresenter?.HideAll();
+            _analytics.LevelStart(level.levelId);
         }
 
         public void NextLevel()
@@ -80,8 +88,10 @@ namespace TileRift.Runtime
             }
 
             _session = new GameSession(next, _session.Hud.Coin);
+            _currentLevelId = next.levelId;
             RefreshViews();
             menuPresenter?.HideAll();
+            _analytics.LevelStart(next.levelId);
         }
 
         public void TryMove(int sx, int sy, int tx, int ty)
@@ -103,6 +113,7 @@ namespace TileRift.Runtime
             {
                 menuPresenter?.ShowWin();
                 _completedLevelCount++;
+                _analytics.LevelComplete(_currentLevelId);
                 _monetization.TryShowInterstitial(_completedLevelCount);
             }
             else if (_session.Menu.Current == MenuScreen.Fail)
@@ -125,6 +136,7 @@ namespace TileRift.Runtime
             }
 
             menuPresenter?.HideAll();
+            _analytics.AdWatched("continue");
             return true;
         }
 
@@ -145,12 +157,19 @@ namespace TileRift.Runtime
             _progress.coin = _session.Hud.Coin;
             _progressRepository.Save(_progress);
             hudPresenter?.Render(_session.Hud);
+            _analytics.AdWatched("coin_reward");
             return true;
         }
 
         public bool TryPurchaseNoAds()
         {
-            return _monetization.TryPurchase("no_ads");
+            var ok = _monetization.TryPurchase("no_ads");
+            if (ok)
+            {
+                _analytics.IapPurchase("no_ads");
+            }
+
+            return ok;
         }
 
         public bool TryPurchaseCoinPack()
@@ -165,6 +184,7 @@ namespace TileRift.Runtime
             _progress.coin = _session.Hud.Coin;
             _progressRepository.Save(_progress);
             hudPresenter?.Render(_session.Hud);
+            _analytics.IapPurchase("coin_pack");
             return true;
         }
 
