@@ -10,6 +10,7 @@ namespace TileRift.Runtime
         [SerializeField] private HudPresenter hud;
         [SerializeField] private MenuPresenter menu;
         [SerializeField] private BoardDebugView board;
+        [SerializeField] private BoardInteractiveView interactiveBoard;
 
         private void Awake()
         {
@@ -37,6 +38,10 @@ namespace TileRift.Runtime
             {
                 board = FindFirstObjectByType<BoardDebugView>();
             }
+            if (interactiveBoard == null)
+            {
+                interactiveBoard = FindFirstObjectByType<BoardInteractiveView>();
+            }
 
             if (controller == null)
             {
@@ -48,11 +53,16 @@ namespace TileRift.Runtime
             {
                 input.Bind(controller);
             }
+            if (interactiveBoard != null)
+            {
+                interactiveBoard.BindInput(input);
+            }
 
             // Ensure presenter references can be assigned in one place if needed.
             _ = hud;
             _ = menu;
             _ = board;
+            _ = interactiveBoard;
         }
     }
 }

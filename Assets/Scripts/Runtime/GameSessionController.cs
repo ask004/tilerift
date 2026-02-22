@@ -16,6 +16,7 @@ namespace TileRift.Runtime
         [SerializeField] private HudPresenter hudPresenter;
         [SerializeField] private MenuPresenter menuPresenter;
         [SerializeField] private BoardDebugView boardDebugView;
+        [SerializeField] private BoardInteractiveView boardInteractiveView;
 
         private IReadOnlyList<LevelData> _levels;
         private LevelFlowController _levelFlow;
@@ -322,6 +323,7 @@ namespace TileRift.Runtime
         {
             hudPresenter?.Render(_session.Hud);
             boardDebugView?.Render(_session.Board);
+            boardInteractiveView?.Render(_session.Board);
         }
 
         private int ResolveInitialCoin()

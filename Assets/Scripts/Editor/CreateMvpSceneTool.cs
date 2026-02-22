@@ -36,6 +36,20 @@ namespace TileRift.EditorTools
             var boardGo = new GameObject("BoardDebug", typeof(RectTransform));
             boardGo.transform.SetParent(canvasGo.transform, false);
             var board = boardGo.AddComponent<BoardDebugView>();
+            var boardGridGo = new GameObject("BoardGrid", typeof(RectTransform), typeof(GridLayoutGroup));
+            boardGridGo.transform.SetParent(canvasGo.transform, false);
+            var boardGridRect = boardGridGo.GetComponent<RectTransform>();
+            boardGridRect.anchorMin = new Vector2(0.5f, 0.5f);
+            boardGridRect.anchorMax = new Vector2(0.5f, 0.5f);
+            boardGridRect.pivot = new Vector2(0.5f, 0.5f);
+            boardGridRect.anchoredPosition = new Vector2(120f, -20f);
+            boardGridRect.sizeDelta = new Vector2(340f, 340f);
+            var grid = boardGridGo.GetComponent<GridLayoutGroup>();
+            grid.cellSize = new Vector2(52f, 52f);
+            grid.spacing = new Vector2(4f, 4f);
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 6;
+            var interactiveBoard = boardGridGo.AddComponent<BoardInteractiveView>();
             var actionGo = new GameObject("Actions", typeof(RectTransform));
             actionGo.transform.SetParent(canvasGo.transform, false);
             var actionPanel = actionGo.AddComponent<DebugActionPanel>();
@@ -111,6 +125,8 @@ namespace TileRift.EditorTools
             SetSerializedReference(controller, "hudPresenter", hud);
             SetSerializedReference(controller, "menuPresenter", menu);
             SetSerializedReference(controller, "boardDebugView", board);
+            SetSerializedReference(controller, "boardInteractiveView", interactiveBoard);
+            SetSerializedReference(interactiveBoard, "grid", grid);
             SetSerializedReference(actionPanel, "controller", controller);
             SetSerializedReference(actionPanel, "outputText", actionOut);
 
