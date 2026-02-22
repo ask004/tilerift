@@ -2,6 +2,7 @@
 using TileRift.Runtime;
 using TileRift.UI;
 using UnityEditor;
+using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,6 +37,15 @@ namespace TileRift.EditorTools
             boardGo.transform.SetParent(canvasGo.transform, false);
             var board = boardGo.AddComponent<BoardDebugView>();
 
+            var boosterGo = new GameObject("Boosters", typeof(RectTransform));
+            boosterGo.transform.SetParent(canvasGo.transform, false);
+            var boosterRect = boosterGo.GetComponent<RectTransform>();
+            boosterRect.anchorMin = new Vector2(1f, 1f);
+            boosterRect.anchorMax = new Vector2(1f, 1f);
+            boosterRect.pivot = new Vector2(1f, 1f);
+            boosterRect.anchoredPosition = new Vector2(-20f, -20f);
+            boosterRect.sizeDelta = new Vector2(220f, 140f);
+
             var moveText = CreateText("MovesText", hudGo.transform, new Vector2(20, -20));
             var coinText = CreateText("CoinText", hudGo.transform, new Vector2(20, -60));
             var pauseText = CreateText("PauseText", hudGo.transform, new Vector2(20, -100));
@@ -50,6 +60,13 @@ namespace TileRift.EditorTools
 
             var boardText = CreateText("BoardText", boardGo.transform, new Vector2(300, -20));
             boardText.alignment = TextAnchor.UpperLeft;
+
+            var undoBtn = CreateButton("UndoButton", boosterGo.transform, "Undo", new Vector2(-110, -20));
+            var hintBtn = CreateButton("HintButton", boosterGo.transform, "Hint", new Vector2(-110, -60));
+            var shuffleBtn = CreateButton("ShuffleButton", boosterGo.transform, "Shuffle", new Vector2(-110, -100));
+            UnityEventTools.AddPersistentListener(undoBtn.onClick, controller.UseUndoBoosterButton);
+            UnityEventTools.AddPersistentListener(hintBtn.onClick, controller.UseHintBoosterButton);
+            UnityEventTools.AddPersistentListener(shuffleBtn.onClick, controller.UseShuffleBoosterButton);
 
             var levels = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Data/levels_mvp.json");
             if (levels == null)
@@ -109,6 +126,33 @@ namespace TileRift.EditorTools
             var image = go.GetComponent<Image>();
             image.color = color;
             return go;
+        }
+
+        private static Button CreateButton(string name, Transform parent, string label, Vector2 anchoredPos)
+        {
+            var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(parent, false);
+
+            var rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(1f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.pivot = new Vector2(1f, 1f);
+            rect.anchoredPosition = anchoredPos;
+            rect.sizeDelta = new Vector2(180f, 30f);
+
+            var image = go.GetComponent<Image>();
+            image.color = new Color(0.1f, 0.1f, 0.1f, 0.75f);
+
+            var text = CreateText(name + "Text", go.transform, new Vector2(8f, -4f));
+            text.text = label;
+            text.alignment = TextAnchor.MiddleCenter;
+            text.rectTransform.anchorMin = Vector2.zero;
+            text.rectTransform.anchorMax = Vector2.one;
+            text.rectTransform.pivot = new Vector2(0.5f, 0.5f);
+            text.rectTransform.anchoredPosition = Vector2.zero;
+            text.rectTransform.sizeDelta = Vector2.zero;
+
+            return go.GetComponent<Button>();
         }
 
         private static void SetSerializedReference(Object target, string field, Object value)

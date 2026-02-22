@@ -249,6 +249,24 @@ namespace TileRift.Runtime
             return true;
         }
 
+        public void UseUndoBoosterButton()
+        {
+            TryUseUndoBooster();
+        }
+
+        public void UseHintBoosterButton()
+        {
+            if (TryUseHintBooster(out var sx, out var sy, out var tx, out var ty))
+            {
+                Debug.Log($"Hint: ({sx},{sy}) -> ({tx},{ty})");
+            }
+        }
+
+        public void UseShuffleBoosterButton()
+        {
+            TryUseShuffleBooster();
+        }
+
         private void RefreshViews()
         {
             hudPresenter?.Render(_session.Hud);
