@@ -117,3 +117,14 @@ Kabul kriteri: Başlık, kısa/uzun açıklama, keyword set tamam.
 - Rewarded + interstitial + 2 IAP sorunsuz.
 - Android release build store’a yüklenebilir.
 - Kritik crash/soft lock yok.
+
+## Unity Uygulama Notları (Gerçekleşen)
+
+- Tarih: `22 Şubat 2026`
+- Unity sürümü: `2022.3.62f3`
+- Proje kapsamı: `Assets/Scripts` altında çekirdek oyun akışı, monetization katmanı, analytics köprüsü, QA araçları ve store içerik dosyaları eklendi.
+- Seviye içeriği: `Assets/Data/levels_mvp.json` dosyası `60 level` olacak şekilde güncellendi.
+- Testler: EditMode testleri command-line runner ile çalıştırıldı, son koşuda `30/30 passed`.
+- Sahne: `Assets/Scenes/Main.unity` üretildi ve runtime akışına bağlandı.
+- Android release hazırlığı: aktif hedef Android, IL2CPP ve minimum SDK ayarları uygulandı.
+- Readiness raporu: `Logs/android-readiness-report.json` çıktısında `canRelease: true`.
