@@ -38,6 +38,11 @@ namespace TileRift.EditorTools
             ExecuteBuild(dryRun: true, quitOnFinish: true);
         }
 
+        public static void DryRunNoExit()
+        {
+            ExecuteBuild(dryRun: true, quitOnFinish: false);
+        }
+
         private static void ExecuteBuild(bool dryRun, bool quitOnFinish)
         {
             var reportFolder = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
