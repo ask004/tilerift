@@ -17,3 +17,9 @@ Hybrid-casual mobile puzzle game concept (Tile Sort / Block Puzzle + Daily Chall
 2. Implement core board + drag/drop + rule engine.
 3. Integrate ads and IAP.
 4. Ship Android soft launch.
+
+## Unity Scene Setup
+1. Open project in Unity 2022 LTS.
+2. Run `TileRift/Create MVP Scene` from the Unity menu.
+3. Open `Assets/Scenes/Main.unity`.
+4. Press Play and use `GameSessionController.TryMove(...)` via hooked UI cell events.
