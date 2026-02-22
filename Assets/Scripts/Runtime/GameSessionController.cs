@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System;
 using TileRift.Daily;
 using TileRift.Level;
+using TileRift.Monetization;
 using TileRift.UI;
 using UnityEngine;
 
@@ -20,6 +21,8 @@ namespace TileRift.Runtime
         private GameSession _session;
         private ProgressRepository _progressRepository;
         private PlayerProgress _progress;
+        private MonetizationFacade _monetization;
+        private int _completedLevelCount;
 
         private void Start()
         {
@@ -40,6 +43,12 @@ namespace TileRift.Runtime
             _progress = _progressRepository.Load();
             DailyRewardService.ApplyToProgress(_progress, DateTime.UtcNow);
             _progressRepository.Save(_progress);
+
+            _monetization = new MonetizationFacade(
+                new RewardedAdsProviderMock(new AdMobServiceMock(), ready: true),
+                new InterstitialAdsProviderMock(ready: true),
+                new IapProviderMock(new IapServiceMock()),
+                new InterstitialPolicy(3));
 
             _levelFlow = new LevelFlowController(_levels);
             StartGame();
@@ -93,11 +102,70 @@ namespace TileRift.Runtime
             if (_session.Menu.Current == MenuScreen.Win)
             {
                 menuPresenter?.ShowWin();
+                _completedLevelCount++;
+                _monetization.TryShowInterstitial(_completedLevelCount);
             }
             else if (_session.Menu.Current == MenuScreen.Fail)
             {
                 menuPresenter?.ShowFail();
             }
+        }
+
+        public bool TryContinueAfterFailWithRewarded()
+        {
+            if (_session == null || _session.Menu.Current != MenuScreen.Fail)
+            {
+                return false;
+            }
+
+            var ok = _monetization.TryContinueWithRewarded();
+            if (!ok)
+            {
+                return false;
+            }
+
+            menuPresenter?.HideAll();
+            return true;
+        }
+
+        public bool TryClaimRewardedCoin(int rewardCoin = 20)
+        {
+            if (_session == null)
+            {
+                return false;
+            }
+
+            var granted = _monetization.TryRewardCoin(rewardCoin);
+            if (granted <= 0)
+            {
+                return false;
+            }
+
+            _session.Hud.AddCoin(granted);
+            _progress.coin = _session.Hud.Coin;
+            _progressRepository.Save(_progress);
+            hudPresenter?.Render(_session.Hud);
+            return true;
+        }
+
+        public bool TryPurchaseNoAds()
+        {
+            return _monetization.TryPurchase("no_ads");
+        }
+
+        public bool TryPurchaseCoinPack()
+        {
+            var ok = _monetization.TryPurchase("coin_pack");
+            if (!ok || _session == null)
+            {
+                return false;
+            }
+
+            _session.Hud.AddCoin(500);
+            _progress.coin = _session.Hud.Coin;
+            _progressRepository.Save(_progress);
+            hudPresenter?.Render(_session.Hud);
+            return true;
         }
 
         public void TogglePause()
