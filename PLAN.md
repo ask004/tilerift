@@ -128,3 +128,5 @@ Kabul kriteri: Başlık, kısa/uzun açıklama, keyword set tamam.
 - Sahne: `Assets/Scenes/Main.unity` üretildi ve runtime akışına bağlandı.
 - Android release hazırlığı: aktif hedef Android, IL2CPP ve minimum SDK ayarları uygulandı.
 - Readiness raporu: `Logs/android-readiness-report.json` çıktısında `canRelease: true`.
+- Etkileşimli tahta görünümü: `BoardInteractiveView` ile grid üzerinde hücreye tıklayarak hamle başlatma akışı eklendi.
+- UI interaktif tahta testleri: `BoardTileGlyphTests` ve `BoardInteractiveViewTests` ile render/etiket/tıklama akışı doğrulandı. - tamamlandı
